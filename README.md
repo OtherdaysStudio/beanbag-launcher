@@ -18,11 +18,9 @@ Every game you own in one place. No store, no ads, no account.</p>
 - **Desktop mode for the desk.** A windowed library manager: add a game or scan a folder of games, edit names, rows and descriptions, change art, or find art and details online.
 - **Search with a controller.** One row of letters, like Apple TV. Or start typing on a keyboard.
 
-| ![Alan Wake II, open: its art fills the screen behind the Play and Change art buttons](docs/screenshots/game.jpg) | ![Change art: tabs for cover, background and logo over a grid of Alan Wake II covers from SteamGridDB](docs/screenshots/art.jpg) |
+| ![Alan Wake II, open: its art fills the screen behind the Play and Change art buttons](docs/screenshots/game.jpg) | ![Search: "resident" typed above a row of letters, with the Resident Evil games below](docs/screenshots/search.jpg) |
 |---|---|
-| ![Search: "resident" typed above a row of letters, with the Resident Evil games below](docs/screenshots/search.jpg) | ![Rows of landscape game art, one sliding sideways](docs/screenshots/rows.jpg) |
-
-![Desktop mode: sidebar, game list and details panel](docs/screenshots/desktop.jpg)
+| ![Rows of landscape game art, one sliding sideways](docs/screenshots/rows.jpg) | ![Desktop mode: sidebar, game list and details panel](docs/screenshots/desktop.jpg) |
 
 ## Install
 

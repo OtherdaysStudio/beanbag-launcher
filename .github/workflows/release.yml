@@ -1,0 +1,30 @@
+name: Release
+
+# Push a tag like v0.2.0 to build the Windows installer and draft a release with it.
+# Every action is pinned to a commit, because this job can write to the repo.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+      # No build cache: a release builds from scratch, so nothing cached can reach it.
+      - run: npm ci
+      - uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0.6.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: Beanbag Launcher ${{ github.ref_name }}
+          releaseBody: See the changes since the last release below.
+          releaseDraft: true

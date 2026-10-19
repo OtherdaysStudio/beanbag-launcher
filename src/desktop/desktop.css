@@ -1,0 +1,758 @@
+/* Desktop mode: a library manager at a desk. Fixed pixel sizes, like a native app;
+   only big-screen mode scales with the TV. Colours come from the shared tokens. */
+
+.desktop {
+  --dt-line: oklch(1 0 0 / 0.08);
+  --dt-hover: oklch(1 0 0 / 0.05);
+  --dt-field: oklch(1 0 0 / 0.06);
+  --dt-sidebar: oklch(0.16 0.004 286);
+  --dt-pane: oklch(0.12 0.003 286);
+  --dt-selected: oklch(0.55 0.26 292 / 0.32);
+
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr) 384px;
+  /* One row the height of the window, so each pane scrolls on its own. */
+  grid-template-rows: minmax(0, 1fr);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--fg);
+  background: var(--dt-pane);
+  user-select: text;
+  -webkit-user-select: text;
+}
+.desktop * {
+  cursor: auto;
+}
+.desktop button {
+  cursor: pointer;
+}
+
+.desktop ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.desktop ::-webkit-scrollbar-thumb {
+  background: oklch(1 0 0 / 0.16);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Sidebar */
+
+.dt-sidebar {
+  overflow-y: auto;
+  padding: 16px 10px 24px;
+  background: var(--dt-sidebar);
+  border-right: 1px solid var(--dt-line);
+}
+.dt-section {
+  margin: 18px 10px 6px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: var(--fg-3);
+}
+.dt-section:first-child {
+  margin-top: 4px;
+}
+.dt-nav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  color: var(--fg-2);
+  font: inherit;
+  text-align: left;
+}
+.dt-nav:hover {
+  background: var(--dt-hover);
+  color: var(--fg);
+}
+.dt-nav[data-active] {
+  background: oklch(1 0 0 / 0.1);
+  color: var(--fg);
+  font-weight: 600;
+}
+.dt-nav-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dt-nav-count {
+  margin-left: 8px;
+  font-size: 12px;
+  color: var(--fg-3);
+  font-variant-numeric: tabular-nums;
+}
+.dt-hint {
+  margin: 0 10px;
+  font-size: 12px;
+  color: var(--fg-3);
+}
+
+/* Main */
+
+.dt-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.dt-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--dt-line);
+}
+.dt-search {
+  flex: 1;
+  max-width: 360px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--dt-field);
+  color: var(--fg);
+  font: inherit;
+  outline: none;
+}
+.dt-search:focus {
+  border-color: oklch(0.55 0.26 292 / 0.8);
+}
+.dt-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.dt-button {
+  height: 32px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--dt-field);
+  color: var(--fg);
+  font: inherit;
+  font-weight: 550;
+  white-space: nowrap;
+}
+.dt-button:hover {
+  background: oklch(1 0 0 / 0.12);
+}
+.dt-button-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.dt-button-primary:hover {
+  background: oklch(0.6 0.26 292);
+}
+.dt-danger {
+  color: oklch(0.72 0.17 25);
+}
+.dt-button:focus-visible,
+.dt-nav:focus-visible,
+.dt-th:focus-visible {
+  outline: 2px solid oklch(0.55 0.26 292);
+  outline-offset: 2px;
+}
+
+.dt-table {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.dt-row {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 2fr) minmax(0, 1.4fr) 120px 96px;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--dt-line);
+}
+.dt-head {
+  min-height: 32px;
+  border-bottom: 1px solid var(--dt-line);
+}
+.dt-th {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--fg-3);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+}
+.dt-th[data-sorted]::after {
+  content: " ↑";
+}
+.dt-th[data-sorted="desc"]::after {
+  content: " ↓";
+}
+.dt-body {
+  flex: 1;
+  overflow-y: auto;
+}
+.dt-body .dt-row:hover {
+  background: var(--dt-hover);
+}
+.dt-body .dt-row[data-selected] {
+  background: var(--dt-selected);
+}
+.dt-thumb {
+  width: 30px;
+  height: 45px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--dt-field);
+}
+.dt-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.dt-name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dt-sub {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--fg-3);
+}
+.dt-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--fg-2);
+}
+.dt-num {
+  font-variant-numeric: tabular-nums;
+}
+.dt-empty {
+  padding: 48px 16px;
+  text-align: center;
+  color: var(--fg-3);
+}
+
+/* Inspector */
+
+.dt-inspector {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-left: 1px solid var(--dt-line);
+  background: var(--dt-sidebar);
+}
+.dt-art {
+  position: relative;
+  flex: none;
+  height: 252px;
+}
+.dt-art button {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: var(--dt-field);
+  color: var(--fg-2);
+  font: inherit;
+}
+.dt-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.dt-hero {
+  inset: 0 0 64px 0;
+}
+.dt-cover {
+  left: 16px;
+  bottom: 0;
+  width: 84px;
+  height: 126px;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px oklch(0 0 0 / 0.5);
+}
+.dt-logo {
+  left: 116px;
+  right: 16px;
+  bottom: 70px;
+  height: 64px;
+  background: none !important;
+}
+.dt-logo img {
+  object-fit: contain;
+  object-position: left bottom;
+  filter: drop-shadow(0 2px 10px oklch(0 0 0 / 0.6));
+}
+.dt-missing {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+  color: var(--fg-3);
+}
+.dt-change {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 6px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: oklch(0 0 0 / 0.7);
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.dt-art button:hover .dt-change,
+.dt-art button:focus-visible .dt-change {
+  opacity: 1;
+}
+
+.dt-form {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 16px 16px;
+}
+.dt-field + .dt-field {
+  margin-top: 16px;
+}
+.dt-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--fg-3);
+}
+.dt-input {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--dt-field);
+  color: var(--fg);
+  font: inherit;
+  outline: none;
+}
+.dt-input:focus {
+  border-color: oklch(0.55 0.26 292 / 0.8);
+}
+.dt-title {
+  font-size: 17px;
+  font-weight: 700;
+}
+.dt-textarea {
+  resize: vertical;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+.dt-meta {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--fg-3);
+}
+.dt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 8px;
+  background: var(--dt-field);
+}
+.dt-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 24px;
+  padding: 0 4px 0 9px;
+  border-radius: 999px;
+  background: oklch(1 0 0 / 0.1);
+  font-size: 12px;
+  font-weight: 550;
+}
+.dt-chip button {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--fg-3);
+  font: inherit;
+}
+.dt-chip button:hover {
+  background: oklch(1 0 0 / 0.12);
+  color: var(--fg);
+}
+.dt-chip-input {
+  flex: 1;
+  min-width: 80px;
+  height: 24px;
+  border: 0;
+  background: none;
+  color: var(--fg);
+  font: inherit;
+  outline: none;
+}
+.dt-path {
+  font-size: 12px;
+  color: var(--fg-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dt-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--dt-line);
+}
+.dt-status {
+  margin-right: auto;
+  font-size: 12px;
+  color: var(--fg-3);
+}
+.dt-status[data-state="error"] {
+  color: oklch(0.72 0.17 25);
+}
+
+/* Scan dialog */
+
+.dt-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  background: oklch(0 0 0 / 0.5);
+}
+.dt-dialog-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(640px, 92vw);
+  max-height: 80vh;
+  border-radius: 14px;
+  background: var(--dt-sidebar);
+  box-shadow: 0 24px 64px oklch(0 0 0 / 0.6);
+}
+.dt-dialog-head {
+  padding: 18px 20px 12px;
+}
+.dt-dialog-head h2 {
+  font-size: 15px;
+  font-weight: 700;
+}
+.dt-dialog-head p {
+  margin-top: 4px;
+  color: var(--fg-3);
+}
+.dt-dialog-list {
+  overflow-y: auto;
+  padding: 0 12px;
+}
+.dt-candidate {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+.dt-candidate:hover {
+  background: var(--dt-hover);
+}
+.dt-candidate small {
+  display: block;
+  color: var(--fg-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dt-dialog-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--dt-line);
+}
+
+/* Find online */
+
+.dt-art-actions {
+  padding: 12px 16px 0;
+}
+.dt-art-actions .dt-button {
+  width: 100%;
+}
+.dt-find-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.dt-find-form .dt-search {
+  max-width: none;
+}
+.dt-wait {
+  padding: 24px 8px;
+  color: var(--fg-3);
+  text-wrap: pretty;
+}
+.dt-error {
+  color: oklch(0.72 0.17 25);
+}
+.dt-result {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--fg);
+  font: inherit;
+  text-align: left;
+}
+.dt-result:hover,
+.dt-result:focus-visible {
+  background: var(--dt-hover);
+  outline: none;
+}
+.dt-result-art {
+  width: 92px;
+  height: 34px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--dt-field);
+}
+.dt-result-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.dt-result-name {
+  min-width: 0;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dt-result-name small {
+  display: block;
+  font-weight: 400;
+  color: var(--fg-3);
+}
+.dt-result-use {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg-3);
+}
+.dt-result:hover .dt-result-use {
+  color: var(--fg);
+}
+
+/* Change art: tabs, then every image the game's sources have */
+
+.dt-art-panel {
+  width: min(1040px, 94vw);
+  max-height: 88vh;
+}
+.dt-art-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.dt-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 20px 12px;
+  border-bottom: 1px solid var(--dt-line);
+}
+.dt-tab {
+  height: 32px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--fg-2);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.dt-tab:hover {
+  background: var(--dt-hover);
+  color: var(--fg);
+}
+.dt-tab[aria-selected="true"] {
+  background: var(--dt-selected);
+  color: var(--fg);
+}
+.dt-tab:focus-visible,
+.dt-choice:focus-visible,
+.dt-link:focus-visible {
+  outline: 2px solid oklch(0.55 0.26 292);
+  outline-offset: 2px;
+}
+.dt-tab-count {
+  margin-left: 6px;
+  font-weight: 500;
+  color: var(--fg-3);
+}
+.dt-tabs-file {
+  margin-left: auto;
+}
+.dt-choices {
+  display: grid;
+  gap: 8px;
+  padding: 12px 0;
+}
+.dt-choices-cover {
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+}
+.dt-choices-background {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+.dt-choices-logo {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+.dt-choices > .dt-wait {
+  grid-column: 1 / -1;
+}
+.dt-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: var(--fg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.dt-choice:hover:not(:disabled):not(.dt-choice-now) {
+  background: var(--dt-hover);
+}
+.dt-choice[aria-pressed="true"] {
+  background: var(--dt-selected);
+}
+.dt-choice:disabled {
+  cursor: progress;
+}
+.dt-choice-now {
+  cursor: default;
+}
+/* Inner radius = outer radius − padding. */
+.dt-choice-art {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--dt-field);
+}
+.dt-choices-cover .dt-choice-art {
+  aspect-ratio: 2 / 3;
+}
+.dt-choices-background .dt-choice-art {
+  aspect-ratio: 96 / 31;
+}
+/* Logos sit on a mid-dark tile, so light and dark ones both show. */
+.dt-choices-logo .dt-choice-art {
+  aspect-ratio: 16 / 9;
+  padding: 10%;
+  background: oklch(0.3 0.01 286);
+}
+.dt-choice-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.dt-choices-logo .dt-choice-art img {
+  object-fit: contain;
+}
+.dt-choice-word {
+  color: var(--fg-2);
+  font-weight: 600;
+}
+.dt-choice-source {
+  font-size: 12px;
+  color: var(--fg-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dt-choice[aria-pressed="true"] .dt-choice-source {
+  color: var(--fg);
+  font-weight: 600;
+}
+.dt-details {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--dt-line);
+}
+.dt-details-text {
+  flex: 1;
+  min-width: 0;
+}
+.dt-details-text p {
+  margin-top: 2px;
+  color: var(--fg-3);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.dt-art-foot {
+  justify-content: space-between;
+  align-items: center;
+}
+.dt-key {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--fg-3);
+}
+.dt-key-form .dt-search {
+  width: 300px;
+}
+.dt-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--fg-2);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.dt-change-form {
+  margin-top: 0;
+  padding: 0 20px 12px;
+}

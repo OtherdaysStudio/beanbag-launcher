@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bag" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8f6bff"/>
+      <stop offset="1" stop-color="#5a2fe0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="228" fill="#000"/>
+  <!-- A beanbag, slumped: wide and soft at the floor, a dent where you sit. -->
+  <path d="M512 262c-118 0-196 96-228 236-27 118-58 222-14 268 52 54 432 54 484 0 44-46 13-150-14-268-32-140-110-236-228-236z" fill="url(#bag)"/>
+  <path d="M392 560c62 52 178 52 240 0" fill="none" stroke="#2a0f86" stroke-width="30" stroke-linecap="round" opacity="0.75"/>
+  <ellipse cx="512" cy="810" rx="250" ry="22" fill="#fff" opacity="0.08"/>
+</svg>
